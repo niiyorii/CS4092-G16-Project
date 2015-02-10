@@ -17,7 +17,7 @@ import javax.swing.JOptionPane;
  * 13119656 M:Neal Barry - 14118858 M:Grace Bevan-Molloy - 14174642 M:Deidre
  * Shanahan - 14117452
  */
-public class group16Project1 {
+public class group16Project {
 
     // Global Declarations (word,vowel,consonant,result)
     //  over the recent years Programming has changed and so have the methods, instead of calling declarations immediately and
@@ -119,17 +119,20 @@ public class group16Project1 {
         notValidInput = true; // which holds - as menuChoice is an empty string and the pattern requires at least one digit.
         while (notValidInput) // notValidInput should be set to true.
         {
+           // I parsed the menu options here instead of the main method as the main method will handle all the switch case statements
+            
+            menuChoice = JOptionPane.showInputDialog(null, menuString, "Word/ Phrase / Sentence Analyser - Make a Selection", 3);
+            
             if (menuChoice.matches(pattern)) {
-                notValidInput = false; // as the menuChoice has now passed data validation we can set the boolean flag to false to step through the WHILE loop..
+                notValidInput = false; 
+                choice = Integer.parseInt(menuChoice);// as the menuChoice has now passed data validation we can set the boolean flag to false to step through the WHILE loop..
             } else if (menuChoice.matches("0")) {
                 notValidInput = false;
                 System.exit(0); // Safe to Assume we can exit the program without errors (do we ask to quit though?)
             } else {
                 JOptionPane.showMessageDialog(null, errorMessage, "Error!", 3);
             }
-            // I parsed the menu options here instead of the main method as the main method will handle all the switch case statements
-            menuChoice = JOptionPane.showInputDialog(null, menuString, "Word/ Phrase / Sentence Analyser - Make a Selection", 3);
-            choice = Integer.parseInt(menuChoice);
+            
         }
         return choice;
     }
@@ -190,10 +193,10 @@ while (notValidInput){
     public static void analyseConsonant() {
         String consonant = "c"; // temporary variable;
         String s2 = ""; // temporary value
-        pattern = "[^a-zA-Z]+,[0-9]";
+        pattern = "[a-zA-Z]+,[0-9]";
         boolean hasConsonant;
 
-        s1 = JOptionPane.showInputDialog(null, "Enter a Word,Phrase or Sentence to Analyse for Consonant Content.", "Analyse Consonant", 2);
+        String s1 = JOptionPane.showInputDialog(null, "Enter a Word,Phrase or Sentence to Analyse for Consonant Content.", "Analyse Consonant", 2);
 
         for (int i = 0; i < s1.length(); i++) {
             //  Look for vowels..
