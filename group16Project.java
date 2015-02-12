@@ -145,80 +145,122 @@ public class group16Project {
      *
      * @return vowels
      */
-    public static void analyseVowel() {
-        String s2 = ""; // storage value
-         pattern = "[^a-zA-Z]+,[0-9]";
-        boolean hasVowels;
-        String s1 = ""; 
-        
-while (notValidInput){
-    if (s1.matches(pattern))
-    s1 = JOptionPane.showInputDialog(null, "Enter a Word,Phrase or Sentence to Analyse for Vowel Content.", "Analyse Vowels", 2);
-
-        for (int i = 0; i < s1.length(); i++) {
-            //  Look for vowels..
-            char ch = s1.charAt(i);
-            if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
-                results = "The word/phrase/Sentence contains vowels ";
-                hasVowels = true;
-
-                //count the vowels
-                int count = s1.replaceAll("[^aeiouAEIOU]", "").length();
-                results += count + "\n";
-                //Check Order
-                String order = s1.toLowerCase();
-                if (order.charAt(i) > order.charAt(i + 1)) {
-                    results += " that are in ascending order (a-z)";
-                } else if (order.charAt(i) < order.charAt(i + 1)) {
-                    results += " that are in decending order (z-a)";
-                } else {
-                    results += "The word/phrase/Sentence contains no vowels \n";
-                }
-
-            }
-
-        }
-    } JOptionPane.showMessageDialog(null, results, "Vowel Analysis Complete", 2);
-        mainMenu(1);
-}
-       
-    
-
-    /**
-     * Analyses the consonant content : the frequency of each consonant (only
-     * for those for which there is at least one of occurrence within input)
-     *
-     * @return consonant
-     */
-    public static void analyseConsonant() {
-        String consonant = "c"; // temporary variable;
-        String s2 = ""; // temporary value
-        pattern = "[a-zA-Z]+,[0-9]";
-        boolean hasConsonant;
-
-        String s1 = JOptionPane.showInputDialog(null, "Enter a Word,Phrase or Sentence to Analyse for Consonant Content.", "Analyse Consonant", 2);
-
-        for (int i = 0; i < s1.length(); i++) {
-            //  Look for vowels..
-            char ch = s1.charAt(i);
-            if (!(ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')) {
-                results = "The word/phrase/Sentence contains vowels ";
-                hasConsonant = true;
-
-                //count the vowels
-                int count = s1.replaceAll("[^aeiouAEIOU]", "").length();
-                results += count + "\n";
-                //Check Order
-                String order = s1.replaceAll(pattern, "[^aeiouAEIOU]");
-                if (order.charAt(i) > order.charAt(i + 1)) {
-                    results += " that are in ascending order (a-z)";
-                } else if (order.charAt(i) < order.charAt(i + 1)) {
-                    results += " that are in decending order (z-a)";
-                } else {
-                    results += "The word/phrase/Sentence contains no vowels \n";
-                }
-
-            }
+    public static void analyseVowel()
+	{
+		String word ,wordCopy, temp, result= "";
+		int a=0, e=0, i=0, o=0, u=0;
+		// call getWordOrPhraseFromEndUser method passing in strings for dialog boxes.
+		word = getWordOrPhraseFromEndUser("Check vowel content of word/phase.","Enter word/phase.");
+		wordCopy = word.toLowerCase();
+		temp = wordCopy;
+		if (word != null)
+		{
+			result += "\nInput is: "+word+".\n";
+			if (wordCopy.indexOf('a') != -1 || wordCopy.indexOf('e') != -1 || wordCopy.indexOf('i') != -1|| wordCopy.indexOf('o') != -1 || wordCopy.indexOf('u') != -1)
+			{
+				result += "\""+word+"\""+ " does contain vowel(s).\n";
+				for (int index =0 ; index < wordCopy.length() ; index++)
+					{
+					if (temp.indexOf('a') != -1)
+						{
+						a++;
+						temp = temp.replaceFirst("a", "#");
+						}
+						else if (temp.indexOf('e') != -1)
+							{
+							e++;
+							temp = temp.replaceFirst("e", "#");
+							}
+							else if (temp.indexOf('i') != -1)
+								{
+								i++;
+								temp = temp.replaceFirst("i", "#");
+								}
+								else if (temp.indexOf('o') != -1)
+									{
+									o++;
+									temp = temp.replaceFirst("o", "#");
+									}
+									else if (temp.indexOf('u') != -1)
+										{
+										u++;
+										temp = temp.replaceFirst("u", "#");
+										}	
+					}
+				result +="Vowel frequency and occurrences:\nA="+a+" E="+e+" I="+i+" O="+o+" U=" +u+"\n";
+				if (wordCopy.indexOf('a') !=-1 && wordCopy.indexOf('e')!=-1 && wordCopy.indexOf('i') !=-1 && wordCopy.indexOf('o')!=-1 && wordCopy.indexOf('u')!=-1)
+					{
+						result +="\""+word+"\" contains all vowels.\n";
+						if (wordCopy.indexOf('a') < wordCopy.indexOf('e') && wordCopy.indexOf('i') < wordCopy.indexOf('o'))
+							{
+							result += "\""+word+"\" contains vowels in alphabetical order.\n";
+							}
+							else if (wordCopy.indexOf('u') < wordCopy.indexOf('o') && wordCopy.indexOf('i') < wordCopy.indexOf('e'))
+								{
+								result += "\""+word+"\" contains vowels in reverse alphabetical order.\n";
+								}
+					}
+				JOptionPane.showMessageDialog(null,result,"Option One Results",1);
+			}
+			else	
+				{
+				result += "\""+word+"\""+ " does not contain any vowels.\n";
+				JOptionPane.showMessageDialog(null,result,"Option One Results",1);
+				}
+		}
+	}
+		 
+	public static void analyseConsonant()
+	{
+	String word , consonantsUsed ="", temp, result ="", vowels[]= {"a","e","i","o","u"};
+	word = getWordOrPhraseFromEndUser("Check consonants content of word/phase.","Enter word/phase.");
+	temp = word.toLowerCase();
+	int position =0;
+	if (word != null)
+		{
+		result += "Word/phrase= "+word+".\n";
+		for (int index = 0; index < 5;index++)
+			{
+			temp= temp.replaceAll(vowels[index],"");
+			}
+			temp = temp.replaceAll("\\W","");
+			temp = temp.replaceAll("\\d","");
+			if (temp.isEmpty() != true)
+				{
+				for (int index = 0 ; index < temp.length(); index++)
+					{
+					String aChar = temp.substring(index,index+1);
+					if ( consonantsUsed.indexOf(aChar) == -1)
+						{
+						consonantsUsed+= aChar;
+						}
+					}
+					int consonantsFrequency[] = new int [consonantsUsed.length()];
+					for (int index = 0 ; index < temp.length()-1; index ++)
+					{
+					String aChar = temp.substring(index,index+1);
+						if (consonantsUsed.indexOf(aChar) != -1)
+							{
+							position = consonantsUsed.indexOf(aChar);
+							consonantsFrequency[position]++;
+							}
+					}
+					result +="Consonants used and frequency,\n";
+						for (int index =0 ; index < consonantsUsed.length(); index++)
+							{
+							result +=consonantsUsed.substring(index,index+1)+": "+consonantsFrequency[index]+" ";
+							}
+				}
+				else
+					{
+					result+="Word/Phase does not contain consonants.\n";
+					}
+		}
+		else
+		result+=word + " does not contain consonants.\n";
+	
+		JOptionPane.showMessageDialog(null, result,"Option Two Results",1);
+	}
             /**
              * Analyses Character content : the number of alphanumeric
              * (SEPARATELY alphabetic and numeric) characters, and the number of
@@ -228,11 +270,28 @@ while (notValidInput){
              * @return aChar
              *
              */
-    public static void analyseCharacter() {
-        char aChar = 'a'; // temporary variable;
+    public static void analyseCharacter () 
+{
+	String words = "This is a Sentence to Analyse for character content, frequency of each character and occurrences";
+	String chars = words.trim() , results ="";
+	int numOfchars, numAlphabet,numNumerical;
+	int freq [] = new int [chars.length];
 
-        return aChar;
-    }
+	
+	
+		if (chars.matches([a-zA-Z]+)
+			numAlphabet = words.ReplaceAll([a-zA-Z]+,"#").length();
+			results+= "you typed: " +words+;
+			results+= "number of characters is " +numAlphabet+ "\n";
+		
+			for(char ch = 0; ch < freq.length; ch++)
+      				if (words[ch] > 0)
+          			results += ch + " appears " + freq[ch] + " times. \n";
+
+		}
+	
+	}	
+}
 
     /**
      * Analyse KeyBoard Rows : return which rows on the keyboard a specific set
@@ -327,7 +386,7 @@ while (notValidInput){
     public static void checkPalindrome() {
         boolean isPalindrome;
         String s2 = "";
-        String s1 = JOptionPane.showInputDialog(null, "Test if the word/phrase or sentance is a Palindrome", "Palindrome Analyser", 3);
+        String s1 = JOptionPane.showInputDialog(null, "Test if the word/phrase or sentence is a Palindrome", "Palindrome Analyser", 3);
         s1 = s1.toLowerCase(); //Ignore Caps;
         s1 = s1.trim(); //trim Whitespaces;
         for (int i = s1.length() - 1; i >= 0; i--) {
@@ -335,14 +394,15 @@ while (notValidInput){
         }
         if (s1.equals(s2)) {
             isPalindrome = true;
-            JOptionPane.showMessageDialog(null, s1 + " - has been analysed to be a Palindrome."
+            JOptionPane.showMessageDialog(null, s1 + " - has been analysed to be a Palindrome at a word level."
                     + "\n Click OK to continue", "Palindrom Analysis Complete", 2);
+                        if()
         } else {
             isPalindrome = false;
-            JOptionPane.showMessageDialog(null, s1 + " - has been analysed not to be a Palindrome."
+            JOptionPane.showMessageDialog(null, s1 + " - has been analysed not to be a Palindrome at a word level."
                     + "\n Click OK to Continue.", "Palindrome Analysis Complete", 2);
         }
-
+        mainMenu(8); 
     }
 
 }
