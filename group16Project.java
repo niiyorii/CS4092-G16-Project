@@ -38,16 +38,6 @@ public class group16Project {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        /**
-         *
-         * this is what's called a constructor, where ever it sees it's own
-         * variable c it will reference the group16Project class as a new
-         * instance of itself in order to call the other methods.
-         * c.AnalyseVowel(); is the same as group16Project.AnalyseVowel(); with
-         * a constructor
-         *
-         */
         /**
          *
          * this is what's called a constructor, where ever it sees it's own
