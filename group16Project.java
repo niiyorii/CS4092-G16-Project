@@ -17,18 +17,19 @@ import javax.swing.JOptionPane;
  * 13119656 M:Neal Barry - 14118858 M:Grace Bevan-Molloy - 14174642 M:Deidre
  * Shanahan - 14117452
  */
-public class group16Project01 {
+public class group16Project {
 
     // Global Declarations (word,vowel,consonant,result)
-    // I Often Declared Variables as early as possible in 2007 in order to insure every possibility was accounted for, but over recent years
-    // Programming has changed and so have the methods, instead of calling declarations globally (this is now for cross-class communication
-    // (in other words from one class file to another) they need to be called when used ( as late as possible)
-    // So what I've done here is I've typed out as many declarations and methods with it's associated javadoc
-    // for now and have worked on the main menu method.
-    static int choice;
-    static String s1, s2, consonant, aChar, results, vowels = "aeiou";
-    static Scanner sc; // for debug (System.in System.out etc)
+    //  over the recent years Programming has changed and so have the methods, instead of calling declarations immediately and
+    // globally (this is now for multiple method interaction.
+    // (in other words from one method to another, and even to other class files) they need to be called when used ( as late as possible)
+    // So what I've done here is I've typed out as many declarations and methods with it's associated javadoc 
+    // for now and have worked building a type of data structure that allows everything to work as intended.
+    //static String s1, s2, consonant, aChar, results, vowels = "aeiou"; // sample declarations
+    static Scanner sc; // for debugging (System.in System.out etc)
+    static boolean notValidInput; // globally declare this so all methods can use notValidInput instead of multiple declarations
     static String pattern = "[^a-zA-Z]+,[0-9]"; // one or more characters of a-z  or A-Z, any digit of 0-9 (no limit).
+    static String results = "";
 
     /**
      * the main Method handles the Main Menu and calls all other Methods, data
@@ -37,7 +38,6 @@ public class group16Project01 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
         /**
          *
          * this is what's called a constructor, where ever it sees it's own
@@ -47,6 +47,7 @@ public class group16Project01 {
          * a constructor
          *
          */
+        int choice = 0;
         group16Project01 c = new group16Project01();
         choice = c.mainMenu(choice);
         if (choice != 0) {
@@ -89,11 +90,11 @@ public class group16Project01 {
      * @return
      */
     public static Integer mainMenu(int choice) {
-        pattern = "([0-8]+,{1})";
+        pattern = "([0-8]{1})";
         String errorMessage = "Invalid menu option selected.";
         errorMessage += "\n\nValid options are 0 to 8 inclusive.";
         errorMessage += "\nSelect OK to retry.";
-        boolean notValidInput;
+
         String menuChoice = "";
 
         String menuString = "1. Analyse vowel content of word/phrase."
@@ -108,16 +109,20 @@ public class group16Project01 {
         notValidInput = true; // which holds - as menuChoice is an empty string and the pattern requires at least one digit.
         while (notValidInput) // notValidInput should be set to true.
         {
+           // I parsed the menu options here instead of the main method as the main method will handle all the switch case statements
+            
+            menuChoice = JOptionPane.showInputDialog(null, menuString, "Word/ Phrase / Sentence Analyser - Make a Selection", 3);
+            
             if (menuChoice.matches(pattern)) {
-                notValidInput = false; // as the menuChoice has now passed data validation we can set the boolean flag to false to step through the WHILE loop..
+                notValidInput = false; 
+                choice = Integer.parseInt(menuChoice);// as the menuChoice has now passed data validation we can set the boolean flag to false to step through the WHILE loop..
             } else if (menuChoice.matches("0")) {
-                System.exit(0);
+                notValidInput = false;
+                System.exit(0); // Safe to Assume we can exit the program without errors (do we ask to quit though?)
             } else {
                 JOptionPane.showMessageDialog(null, errorMessage, "Error!", 3);
             }
-            // I parsed the menu options here instead of the main method as the main method will handle all the switch case statements
-            menuChoice = JOptionPane.showInputDialog(null, menuString, 3);
-            choice = Integer.parseInt(menuChoice);
+            
         }
         return choice;
     }
@@ -130,61 +135,153 @@ public class group16Project01 {
      *
      * @return vowels
      */
-    public static String analyseVowel() {
-        s2 = ""; // temporary value
+    public static void analyseVowel()
+	{
+		String word ,wordCopy, temp, result= "";
+		int a=0, e=0, i=0, o=0, u=0;
+		// call getWordOrPhraseFromEndUser method passing in strings for dialog boxes.
+		word = getWordOrPhraseFromEndUser("Check vowel content of word/phase.","Enter word/phase.");
+		wordCopy = word.toLowerCase();
+		temp = wordCopy;
+		if (word != null)
+		{
+			result += "\nInput is: "+word+".\n";
+			if (wordCopy.indexOf('a') != -1 || wordCopy.indexOf('e') != -1 || wordCopy.indexOf('i') != -1|| wordCopy.indexOf('o') != -1 || wordCopy.indexOf('u') != -1)
+			{
+				result += "\""+word+"\""+ " does contain vowel(s).\n";
+				for (int index =0 ; index < wordCopy.length() ; index++)
+					{
+					if (temp.indexOf('a') != -1)
+						{
+						a++;
+						temp = temp.replaceFirst("a", "#");
+						}
+						else if (temp.indexOf('e') != -1)
+							{
+							e++;
+							temp = temp.replaceFirst("e", "#");
+							}
+							else if (temp.indexOf('i') != -1)
+								{
+								i++;
+								temp = temp.replaceFirst("i", "#");
+								}
+								else if (temp.indexOf('o') != -1)
+									{
+									o++;
+									temp = temp.replaceFirst("o", "#");
+									}
+									else if (temp.indexOf('u') != -1)
+										{
+										u++;
+										temp = temp.replaceFirst("u", "#");
+										}	
+					}
+				result +="Vowel frequency and occurrences:\nA="+a+" E="+e+" I="+i+" O="+o+" U=" +u+"\n";
+				if (wordCopy.indexOf('a') !=-1 && wordCopy.indexOf('e')!=-1 && wordCopy.indexOf('i') !=-1 && wordCopy.indexOf('o')!=-1 && wordCopy.indexOf('u')!=-1)
+					{
+						result +="\""+word+"\" contains all vowels.\n";
+						if (wordCopy.indexOf('a') < wordCopy.indexOf('e') && wordCopy.indexOf('i') < wordCopy.indexOf('o'))
+							{
+							result += "\""+word+"\" contains vowels in alphabetical order.\n";
+							}
+							else if (wordCopy.indexOf('u') < wordCopy.indexOf('o') && wordCopy.indexOf('i') < wordCopy.indexOf('e'))
+								{
+								result += "\""+word+"\" contains vowels in reverse alphabetical order.\n";
+								}
+					}
+				JOptionPane.showMessageDialog(null,result,"Option One Results",1);
+			}
+			else	
+				{
+				result += "\""+word+"\""+ " does not contain any vowels.\n";
+				JOptionPane.showMessageDialog(null,result,"Option One Results",1);
+				}
+		}
+	}
+		 
+	public static void analyseConsonant()
+	{
+	String word , consonantsUsed ="", temp, result ="", vowels[]= {"a","e","i","o","u"};
+	word = getWordOrPhraseFromEndUser("Check consonants content of word/phase.","Enter word/phase.");
+	temp = word.toLowerCase();
+	int position =0;
+	if (word != null)
+		{
+		result += "Word/phrase= "+word+".\n";
+		for (int index = 0; index < 5;index++)
+			{
+			temp= temp.replaceAll(vowels[index],"");
+			}
+			temp = temp.replaceAll("\\W","");
+			temp = temp.replaceAll("\\d","");
+			if (temp.isEmpty() != true)
+				{
+				for (int index = 0 ; index < temp.length(); index++)
+					{
+					String aChar = temp.substring(index,index+1);
+					if ( consonantsUsed.indexOf(aChar) == -1)
+						{
+						consonantsUsed+= aChar;
+						}
+					}
+					int consonantsFrequency[] = new int [consonantsUsed.length()];
+					for (int index = 0 ; index < temp.length()-1; index ++)
+					{
+					String aChar = temp.substring(index,index+1);
+						if (consonantsUsed.indexOf(aChar) != -1)
+							{
+							position = consonantsUsed.indexOf(aChar);
+							consonantsFrequency[position]++;
+							}
+					}
+					result +="Consonants used and frequency,\n";
+						for (int index =0 ; index < consonantsUsed.length(); index++)
+							{
+							result +=consonantsUsed.substring(index,index+1)+": "+consonantsFrequency[index]+" ";
+							}
+				}
+				else
+					{
+					result+="Word/Phase does not contain consonants.\n";
+					}
+		}
+		else
+		result+=word + " does not contain consonants.\n";
+	
+		JOptionPane.showMessageDialog(null, result,"Option Two Results",1);
+	}
+            /**
+             * Analyses Character content : the number of alphanumeric
+             * (SEPARATELY alphabetic and numeric) characters, and the number of
+             * other symbols, inclusive - count the frequency of each character
+             * found in the Input.
+             *
+             * @return aChar
+             *
+             */
+    public static void analyseCharacter () 
+{
+	String words = "This is a Sentence to Analyse for character content, frequency of each character and occurrences";
+	String chars = words.trim() , results ="";
+	int numOfchars, numAlphabet,numNumerical;
+	int freq [] = new int [chars.length];
 
-        boolean hasVowels;
+	
+	
+		if (chars.matches([a-zA-Z]+)
+			numAlphabet = words.ReplaceAll([a-zA-Z]+,"#").length();
+			results+= "you typed: " +words+;
+			results+= "number of characters is " +numAlphabet+ "\n";
+		
+			for(char ch = 0; ch < freq.length; ch++)
+      				if (words[ch] > 0)
+          			results += ch + " appears " + freq[ch] + " times. \n";
 
-        s1 = JOptionPane.showInputDialog(null, "Enter a Word,Phrase or Sentence to Analyse for Vowel Content.", "Analyse Vowels", 2); /// fifty
-
-        for (int i = 0; i < s1.length(); i++) {
-            //  Look for vowels..
-            char ch = s1.charAt(i);
-            if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u') {
-                results += "The word/phrase/Sentence contains vowels \n";
-                hasVowels = true;
-
-                //count the vowels
-                int count = s1.replaceAll("[^aeiouAEIOU]", "").length();
-                results += count + "\n";
-                //Check Order
-                string order = s1.replaceAll(pattern, "[^aeiouAEIOU]");
-                if (s1.charAt(i) > s1.charAt(+1)) {
-                    
-                }
-            } else {
-                results += "The word/phrase/Sentence contains no vowels \n";
-            }
-
-        }
-        return vowels;
-    }
-
-    /**
-     * Analyses the consonant content : the frequency of each consonant (only
-     * for those for which there is at least one of occurrence within input)
-     *
-     * @return consonant
-     */
-    public static String analyseConsonant() {
-        consonant = "c"; // temporary variable;
-
-        return consonant;
-    }
-
-    /**
-     * Analyses Character content : the number of alphanumeric (SEPARATELY
-     * alphabetic and numeric) characters, and the number of other symbols,
-     * inclusive - count the frequency of each character found in the Input.
-     *
-     * @return aChar
-     *
-     */
-    public static char analyseCharacter() {
-        char aChar = 'a'; // temporary variable;
-
-        return aChar;
-    }
+		}
+	
+	}	
+}
 
     /**
      * Analyse KeyBoard Rows : return which rows on the keyboard a specific set
@@ -193,13 +290,12 @@ public class group16Project01 {
      * @return KeybRow
      *
      */
-    public static String analyseKeybRow() {
+    public static void analyseKeybRow() {
         String KeybRow = "First Row:X \n Second Row: Y \n Third Row: Z";
         String KeybRow1 = "qwertyuiop[]";
         String KeybRow2 = "asdfghjkl;'#";
         String KeybRow3 = "\\zxcvbnm,./"; // added escape \ to include it to the string
 
-        return KeybRow;
     }
 
     /**
@@ -211,12 +307,12 @@ public class group16Project01 {
      * x.contains[i] = vowels (not correct) isAlternate = true , else
      * isAlternate = false;
      */
-    public static boolean analyseAlternation() {
+    public static void analyseAlternation() {
         boolean isAlternate = false;
         String analyseAlt = JOptionPane.showInputDialog(null, "Enter a word phrase or sentence to test for alternation", "Alternation Analysis", 3);
 
         if (analyseAlt.charAt(i) > analyseAlt.charAt(+1)) {
-            return isAlternate;
+
         }
     }
 
@@ -230,7 +326,7 @@ public class group16Project01 {
      * @return wordsLength the length of the longest and shortest words output
      * example:"The longest word was 7 the shortest word was 3"
      */
-    public static String analyseWordLength() {
+    public static void analyseWordLength() {
         String analyseWords = "Enter a word, phrase or sentence to analyse it's length."; // temporary variable
         String longestWord, shortestWord;
         pattern = ("[a-zA-Z],[0-9]");
@@ -261,10 +357,9 @@ public class group16Project01 {
      * false; JOption..("X isn't an Anagram of Y");
      *
      */
-    public static boolean checkAnagram() {
+    public static void checkAnagram() {
         boolean isAnagram = false;
 
-        return isAnagram;
     }
 
     /**
@@ -278,10 +373,10 @@ public class group16Project01 {
      * level or sentence level.. isPalindrome=true; else isPalindrom=false;
      *
      */
-    public static boolean checkPalindrome() {
+    public static void checkPalindrome() {
         boolean isPalindrome;
-        s2 = "";
-        s1 = JOptionPane.showInputDialog(null, "Test if the word/phrase or sentance is a Palindrome", "Palindrome Analyser", 3);
+        String s2 = "";
+        String s1 = JOptionPane.showInputDialog(null, "Test if the word/phrase or sentence is a Palindrome", "Palindrome Analyser", 3);
         s1 = s1.toLowerCase(); //Ignore Caps;
         s1 = s1.trim(); //trim Whitespaces;
         for (int i = s1.length() - 1; i >= 0; i--) {
@@ -289,14 +384,15 @@ public class group16Project01 {
         }
         if (s1.equals(s2)) {
             isPalindrome = true;
-            JOptionPane.showMessageDialog(null, s1 + " - has been analysed to be a Palindrome."
+            JOptionPane.showMessageDialog(null, s1 + " - has been analysed to be a Palindrome at a word level."
                     + "\n Click OK to continue", "Palindrom Analysis Complete", 2);
+                        if()
         } else {
             isPalindrome = false;
-            JOptionPane.showMessageDialog(null, s1 + " - has been analysed not to be a Palindrome."
+            JOptionPane.showMessageDialog(null, s1 + " - has been analysed not to be a Palindrome at a word level."
                     + "\n Click OK to Continue.", "Palindrome Analysis Complete", 2);
         }
-        return isPalindrome;
+        mainMenu(8); 
     }
 
 }
