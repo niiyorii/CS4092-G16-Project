@@ -17,14 +17,9 @@ import javax.swing.JOptionPane;
  * 13119656 M:Neal Barry - 14118858 M:Grace Bevan-Molloy - 14174642 M:Deidre
  * Shanahan - 14117452
  */
-public class group16Project01 {
+public class group16Project {
 
-    // Global Declarations (word,vowel,consonant,result)
-    // I Often Declared Variables as early as possible in 2007 in order to insure every possibility was accounted for, but over recent years
-    // Programming has changed and so have the methods, instead of calling declarations globally (this is now for cross-class communication
-    // (in other words from one class file to another) they need to be called when used ( as late as possible)
-    // So what I've done here is I've typed out as many declarations and methods with it's associated javadoc
-    // for now and have worked on the main menu method.
+    //Global Declarations
     static int choice;
     static String s1, s2, consonant, aChar, results, vowels = "aeiou";
     static Scanner sc; // for debug (System.in System.out etc)
@@ -93,7 +88,7 @@ public class group16Project01 {
         String errorMessage = "Invalid menu option selected.";
         errorMessage += "\n\nValid options are 0 to 8 inclusive.";
         errorMessage += "\nSelect OK to retry.";
-        boolean notValidInput;
+        boolean validInput;
         String menuChoice = "";
 
         String menuString = "1. Analyse vowel content of word/phrase."
@@ -105,18 +100,24 @@ public class group16Project01 {
                 + "\n7. Are two words/phases anagrams of each other."
                 + "\n8. Is a word/phase a palindrome."
                 + "\n0. Exit.";
-        notValidInput = true; // which holds - as menuChoice is an empty string and the pattern requires at least one digit.
-        while (notValidInput) // notValidInput should be set to true.
+        validInput = false; // which holds - assuming we can never trust the end user.
+        // I parsed the menu options here instead of the main method as
+        //the main method will handle all the switch case statements
+            menuChoice = JOptionPane.showInputDialog(null, menuString, 3);
+            
+        while (!(validInput)) // validInput should be set to false.
         {
             if (menuChoice.matches(pattern)) {
-                notValidInput = false; // as the menuChoice has now passed data validation we can set the boolean flag to false to step through the WHILE loop..
-            } else if (menuChoice.matches("0")) {
-                System.exit(0);
+                // as the menuChoice has now passed data validation we can set the 
+                //boolean flag to false to step through the WHILE loop and now parse menuChoice to integer data type
+                validInput = true; 
+                
+            } else if (menuChoice.Equals("0")) {
+                System.exit(0); // System Exit without any errors
             } else {
+                // Did something in java hiccup ? or the end user give us invalid input?
                 JOptionPane.showMessageDialog(null, errorMessage, "Error!", 3);
             }
-            // I parsed the menu options here instead of the main method as the main method will handle all the switch case statements
-            menuChoice = JOptionPane.showInputDialog(null, menuString, 3);
             choice = Integer.parseInt(menuChoice);
         }
         return choice;
@@ -128,7 +129,7 @@ public class group16Project01 {
      * order, the frequency of each vowel (only for those where there is at
      * least one of within input.)
      *
-     * @return vowels
+     * 
      */
     public static String analyseVowel() {
         s2 = ""; // temporary value
