@@ -1,0 +1,376 @@
+import java.util.*;
+import java.io.*;
+import java.text.*;
+public class AddSearch 
+{
+	public static void main (String [] args) throws IOException
+	{
+	//this just displays if user input is invalid
+	String results="Invalid Input\n"
+					+"Correct Options Examples to be Entered\n"
+					+"1:AA Lisbon LIS\t\t\t\t (Add Airport)\n"
+					+"2:EA BHD Belfast\t\t\t (Edit Airport)\n"
+					+"3:DA SNN\t\t\t\t (Delete Airport)\n"
+					+"4:EF EI3240 -MTWTRSS- 1/5/2015 1/8/2015\t (Edit Flight)\n"
+					+"5:DF EI3240\t\t\t\t (Delete Flight)\n"
+					+"6:SF LIS BHD\t\t\t\t (Search Flight)\n"
+					+"7:SD LIS BHD 1/6/2015\t\t\t (Search Date)";
+	//if args.length is not zero it will then check if the length matches what we need
+	if (args.length !=0)
+	{
+		//there is only two options that take too command lines so it checks args[0] 
+		// to see if it matches what we need e.g AA or DF
+		if (args.length == 2)
+			{
+			if (args[0].equals("DA"))
+			//deleteAirport(args);
+			System.out.println("call Method");
+			else if (args[0].equals("DF"))
+			//deleteflight(args);
+			System.out.println("call Method");
+			}
+		//three options take three arguments it then checks args[0]like above again 
+		else if (args.length ==3)
+		{
+			if (args[0].equals("AA"))
+			//addAirport(args);
+			System.out.println("call Method");
+			else if (args[0].equals("EA"))
+			//editAirport(args);
+			System.out.println("call Method");
+			else if (args[0].equals("SF"))
+			System.out.println("Searching for Flight");
+			searchFlight(args);
+			
+		}
+		//one option takes 4 so this checks lenght and args[0]
+		else if (args.length == 4 && args[0].equals("SD"))
+		{
+			System.out.println("Searching for Flight.");
+			searchFlight(args);
+			
+		}
+		//same with this one
+		else if (args.length ==5 && args[0].equals("EF"))
+		{
+			//editFlight(args);
+			System.out.println("call Method");
+		}
+		//finally if they do not match up it will print results
+		else
+		System.out.print(results);
+	}
+	else
+		//this is printed if args.length is 0
+	{
+		System.out.print(results);
+	}
+}
+	/*public static void addAirport (String [] args)
+	{
+	File fileName = new File ("Airports.txt");
+	String flightName = args[1];
+	String flightCode = args[2];
+	String toFile = "";
+	// check airport code 3 letters in length
+	if (flightCode.length = 3)
+	{		
+		// if File doesn't exist(temporary)
+		if(!fileName.exists())
+		{
+			//create it
+			//write args 1 and args 2 to file
+			PrintWriter output = new PrintWriter(new FileWriter(fileName));
+			Scanner in = new Scanner(System.in);
+			toFile = flightName + "," + flightCode "\n";
+			output.print(toFile);
+			//prompt the end user to append to the file
+			//requires validation
+			System.out.println("How many Airports do you wish to add?);
+			//write airport name + , airportCode to airports.txt
+			int count = in.nextInt();
+			do
+			{
+				System.out.println("Please Enter an Airport Name);
+				flightName = in.nextLine();
+				System.out.println("Please Enter the Flight Code for this Airport);
+				flightCode = in.nextLine();
+				toFile = flightName + "," + flightCode "\n";		
+				output.print(toFile);
+				count--;
+			}	
+			while (count > 0);
+			output.close()
+		}	
+		//else File Already Exists
+		else
+		{
+		//write to file
+		PrintWriter output = new PrintWriter(writer);
+		//read file (check for airport name)
+		Scannner in = new Scanner(new FileReader(fileName));
+		while(in.hasNextLine)
+			for(int i = 0; i < in.length();i++)
+				toFile += in.nextline(); 
+				// if exists in file .. display messages
+				if(in.IndexOf(toFile) = -1)
+					System.out.println("Airport Name and Code already exist");
+				// else write to file in ascending sequence.
+				else
+					String entryArray [] = toFile.split("/n");
+					ArrayList<entryArray> entryList = new ArrayList<entryArray>(entryArray.toList());
+					for (int i = 0; i < entryList.size(); i++)
+						entryList.set(i,toFile);
+						if (entryList.get(i).substring(0,1) > entryList.get(i+1).substring(0,1))
+						{
+							String temp = entryList.get(i);
+							entryList.set(i,i+1);
+							entryList.set(i+1,temp);
+						}
+						output.print(entryList.asArray().toString()); // not chained properly
+						output.close();
+		}
+	}
+	//check airport code fail -> report error.	
+	else
+		System.out,println("Invalid Airport Code Format..requires 3 Letters, example: Shannon, SNN");
+	}
+	*/
+
+	}
+	public static void searchFlight (String [] args) 
+	{
+	//set fileNames
+		//System.out.println("Setting up Declarations");
+		File fAirports = new File("Airports.txt");
+		File fFlights = new File("Flights.txt");
+		//set command line (Flight Name), (Flight Destination), (Flight Date) variables
+		String searchResults = "";
+		String airportName,airportDest,ttFlightDate,search,flightFrom,flightTo,date;
+		
+
+			//System.out.println("Debug Checkpoint 1: If Files Exist,(Do Search)");
+			//if command line arguments is 3 (search source airport & destination airport)
+			if (args.length == 3)
+			{	
+				airportName = args[1]; // TODO: Are Flight Codes of length of 3
+				airportDest = args[2]; // TODO: Are Flight Codes of length of 3
+				//open files
+				
+				//if Files exist... continue, else handle error
+				try  
+				{
+					//System.out.println("Opening Files");
+					Scanner in1 = new Scanner(new FileReader(fAirports));
+					Scanner in2 = new Scanner(new FileReader(fFlights));
+
+					ArrayList <String> haystack1  = new ArrayList <String>(); // airports
+					ArrayList <String> haystack2  = new ArrayList <String>(); // flights
+					//System.out.println("Reading Files");
+
+					for(int i=0; in1.hasNextLine();i++)
+					{
+						
+						haystack1.add(in1.nextLine());  
+						//what's the needle in the haystack (what are we looking for)
+						String needle = airportName;
+						// Assuming data formatting stays the same, search for the left comma and the right comma
+						//firstIndexOf
+						int frst = haystack1.get(i).indexOf(",");
+						//secondIndexOf
+						int snd = haystack1.get(i).indexOf(",", frst+1);
+						//thirdIndexOf
+						int thrd = haystack1.get(i).indexOf(",", snd+1);
+						//dissect the search term from the placeholders
+						flightFrom = haystack1.get(i).toString().substring(frst+1, frst+4); //skip the commas and accept 3 characters
+						if (flightFrom.equals(needle))
+						{
+							searchResults += "Flights from: " + flightFrom;
+						}
+					}
+					in1.close();
+					//System.out.println("Debug Checkpoint 2,(Input 2)");
+					for(int j=0; in2.hasNextLine();j++)
+					{
+						haystack2.add(in2.nextLine());
+						//what's the needle in the haystack
+						String needle = airportDest;
+						//firstIndexOf
+						int frst = haystack2.get(j).indexOf(",");
+						//secondIndexOf
+						int snd = haystack2.get(j).indexOf(",", frst+1);
+						//thirdIndexOf
+						int thrd = haystack2.get(j).indexOf(",", snd+1);
+						//dissect the search term from the placeholders
+						flightTo = haystack2.get(j).toString().substring(snd+1, snd+4); //skip the commas and accept 3 characters
+						if (flightTo.equals(needle))
+						{
+							searchResults += " to " + flightTo + " found \n"
+							+"search results:" + haystack2.get(j) ;
+							System.out.println(searchResults);
+							//System.out.println("Input 2 Complete without Errors");
+						}
+						else
+						 if (!flightTo.contains(airportName))
+						 {
+									haystack1.remove(airportName);
+								System.out.println(" Flights From: "+ airportName + " To " + flightTo + " No information available" ); // No information is available
+						}
+					}
+						in2.close();
+				}
+				catch (FileNotFoundException ex)
+				{
+					System.out.println("An error Occurred" + ex.getMessage());
+				}
+			}
+			else if (args.length == 4)
+			{
+				airportName = args[1]; //TODO matches 3 letters? [A-Z] {3}
+				airportDest = args[2];//TODO matches 3 letters? [A-Z] {3}
+				ttFlightDate = args[3]; ////TODO matches [d02%/d02%/d4%]  date & time format...
+				//get current date
+				Calendar aCalendar = Calendar.getInstance(); 
+				Date currentDateTime = aCalendar.getTime();
+				
+				//Specify the constraints for the calendar format..					
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				//System.out.println("System Debug:(Variables Initialised)");
+				//if Files exist... continue, else handle error
+				try 
+				{
+					//System.out.println("Opening Files");
+					Scanner in1 = new Scanner(new FileReader(fAirports));
+					Scanner in2 = new Scanner(new FileReader(fFlights));	
+					ArrayList <String> haystack1  = new ArrayList <String>(); // airports
+					ArrayList <String> haystack2  = new ArrayList <String>(); // flights
+					//System.out.println("System Debug: Reading Files");
+					
+					//System.out.println("Debug Checkpoint 3,(Input 1)");
+					for(int i=0; in1.hasNextLine();i++)
+					{
+						haystack1.add(in1.nextLine());  
+						//what's the needle in the haystack
+						String needle = airportName;
+						//(new comment) IndexOf can be switched for the nThPosition method
+						//to save on resources.
+						// Assuming data formatting stays the same, search for the left comma and the right comma
+						//for airport Source Code
+						//firstIndexOf
+						int frst = haystack1.get(i).indexOf(",");
+						//secondIndexOf
+						int snd = haystack1.get(i).indexOf(",", frst+1);
+						//thirdIndexOf
+						int thrd = haystack1.get(i).indexOf(",", snd+1);
+						
+						//extract the search term from the Index positions
+						flightFrom = haystack1.get(i).toString().substring(frst+1, frst+4); //skip the commas and accept 3 characters
+						// some added fun, extract the full airport name... should probably move the variable name outside the for loop scope for it to work fully..
+						//String flightFromName = haystack1.get(i).toString().substring(0,frst-1);
+						//System.out.println(flightFromName);
+						
+						if (flightFrom.equals(needle))
+						{
+							searchResults += "Flights from: " + flightFrom;
+						}
+					}
+					in1.close();
+					//System.out.println("Debug Checkpoint 4,(Input 2)");
+					for(int j=0; in2.hasNextLine();j++)
+					{
+						haystack2.add(in2.nextLine());
+						//what's the needle in the haystack
+						String needle = airportDest;
+						//for airport Destination Code
+						//firstIndexOf
+						int frst = haystack2.get(j).indexOf(",");
+						//secondIndexOf
+						int snd = haystack2.get(j).indexOf(",", frst+1);
+						//thirdIndexOf
+						int thrd = haystack2.get(j).indexOf(",", snd+1);
+						//extract the search term from the Index positions
+						flightTo = haystack2.get(j).toString().substring(snd+1, snd+4); //skip the commas and accept 3 characters
+						//for date extraction,
+						//firstLastIndexOf
+						int last = haystack2.get(j).lastIndexOf(",");
+						//secondLastIndexOf
+						int sndLast = haystack2.get(j).lastIndexOf(",", last-1);
+						//thirdLastIndexOf
+						int thrdLast = haystack2.get(j).lastIndexOf(",",sndLast-1);
+						//timetable current date
+						String ttCurrentdate = haystack2.get(j).toString().substring(sndLast+1,last);
+						//timetable future date
+						String ttFutureDate = haystack2.get(j).toString().substring(last+1,haystack.get(i).toString().length());// skip the comma and accept dd/mm/yyyy
+						
+						//System.out.println(date);
+						
+						try 
+						{ 
+							Date currentDate = sdf.parse(ttCurrentdate);
+							Date futureDate = sdf.parse(ttFutureDate);
+							Date flightDate = sdf.parse(ttFlightDate);
+							String currentdate = sdf.format(currentDate);
+							String futuredate = sdf.format(futureDate);
+							String flightdate = sdf.format(flightDate);
+							//System.out.println("Debug Checkpoint 5,(Dates Parsed and initialised)");
+							if (flightTo.equals(needle))
+							{
+								if (flightDate.before(futureDate) && flightDate.after(currentDateTime)) // we're ok we're on schedule
+								{
+									searchResults += " due to arrive to " + flightTo +" on the " + flightdate + "\n"
+									+"Search results: "+haystack2.get(j);
+									System.out.println(searchResults);
+									//System.out.println("Input 2 Complete without Errors");
+								}
+								else if(flightDate.before(currentDate) && flightDate.before(currentDateTime)) // the flight already left
+								{
+									searchResults += " has no scheduled flights to " + flightTo+" before "+currentdate+"\n"
+									+"Search results: "+haystack2.get(j);
+									System.out.println(searchResults);
+								}
+								else if(flightDate.before(currentDateTime) && flightDate.after(currentDate)) // the flight already left.
+								{
+										searchResults += " arrived on-time at " + flightTo+" on the "+flightdate+"\n"
+									+"Search results: "+haystack2.get(j);
+									System.out.println(searchResults);
+								}
+								else if(flightDate.before(futureDate) && flightDate.after(currentDateTime)) // the flight is scheduled to leave
+								{
+									searchResults += " scheduled to leave for " + flightTo+" "+flightDate+"\n"
+									+"Search results: "+haystack2.get(j);
+									System.out.println(searchResults);
+								}
+								else if(flightDate.after(futureDate) && flightDate.after(currentDateTime)) // no scheduled flights
+								{
+									searchResults += " has no scheduled flights to " + flightTo+" after "+futuredate+"\n"
+									+"Search results: "+haystack2.get(j);
+									System.out.println(searchResults);
+								}
+							
+							}
+							
+							else
+								 if (!flightTo.contains(airportName)){
+									haystack1.remove(airportName);
+								System.out.println("Flight To: " + flightTo + " No information available"); // No information is available
+								}
+						}
+						catch (ParseException ex)
+						{
+							System.out.println("Error parsing specified date");
+							System.exit(1);
+						}
+					}
+					in2.close();
+				}
+				catch (FileNotFoundException ex)
+				{
+					System.out.println("An error Occurred" + ex.getMessage());
+					System.exit(1);
+				}
+			}
+			else
+			System.out.println("Invalid number of arguments");			
+		}
+//insert methods
+	}
